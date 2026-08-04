@@ -105,6 +105,7 @@ def expected_actions() -> set[str]:
 
 
 class TestLegalActions(unittest.TestCase):
+    
     def test_generates_every_atomic_action(self):
         actions = legal_actions(modifier_request())
 
@@ -186,7 +187,33 @@ class TestLegalActions(unittest.TestCase):
                 f"{action} appeared {counts[action]} times; "
                 f"expected approximately {expected_count:.0f}",
             )
+    def test_ultra_burst_generates_all_enabled_variants(self):
+        request = modifier_request()
+        active = request["active"][0]
 
+        active["canMegaEvo"] = False
+        active["canUltraBurst"] = True
+        active["canZMove"] = [None, None, None, None]
+
+        actions = legal_actions(request)
+
+        expected = [
+            "move 1",
+            "move 1 ultra",
+            "move 2",
+            "move 2 ultra",
+            "move 4",
+            "move 4 ultra",
+            "switch 2",
+            "switch 4",
+        ]
+
+        self.assertCountEqual(actions, expected)
+        self.assertNotIn("move 3", actions)
+        self.assertNotIn("move 3 ultra", actions)
+        self.assertFalse(
+            any("mega" in action or "zmove" in action for action in actions)
+        )
 
 if __name__ == "__main__":
     unittest.main()

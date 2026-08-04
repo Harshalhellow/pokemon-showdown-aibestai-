@@ -48,21 +48,23 @@ def legal_actions(request: BattleRequest) -> list[str]:
 
     active = active_requests[0]
     moves = active.get("moves", [])
+    can_mega_evolve = active.get("canMegaEvo", False)
+    can_ultra_burst = active.get("canUltraBurst", False)
+    z_moves = active.get("canZMove") or []
+
     choices: list[str] = []
 
     for slot, move in enumerate(moves, start=1):
-        if move.get("disabled", False):
-            continue
+        if not move.get("disabled", False):
+            choices.append(f"move {slot}")
 
-        choices.append(f"move {slot}")
+            if can_mega_evolve:
+                choices.append(f"move {slot} mega")
 
-        if active.get("canMegaEvo", False):
-            choices.append(f"move {slot} mega")
+            if can_ultra_burst:
+                choices.append(f"move {slot} ultra")
 
-    z_moves = active.get("canZMove") or []
-
-    for slot, z_move in enumerate(z_moves, start=1):
-        if z_move is not None:
+        if slot <= len(z_moves) and z_moves[slot - 1] is not None:
             choices.append(f"move {slot} zmove")
 
     if not active.get("trapped", False):
