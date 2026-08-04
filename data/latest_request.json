@@ -1,0 +1,189 @@
+{
+  "received_at": "2026-07-28T08:01:15.951804+00:00",
+  "room_id": "battle-gen7randombattle-37",
+  "request": {
+    "active": [
+      {
+        "moves": [
+          {
+            "move": "Bulk Up",
+            "id": "bulkup",
+            "pp": 31,
+            "maxpp": 32,
+            "target": "self",
+            "disabled": false
+          },
+          {
+            "move": "Drain Punch",
+            "id": "drainpunch",
+            "pp": 15,
+            "maxpp": 16,
+            "target": "normal",
+            "disabled": false
+          },
+          {
+            "move": "Mach Punch",
+            "id": "machpunch",
+            "pp": 48,
+            "maxpp": 48,
+            "target": "normal",
+            "disabled": false
+          },
+          {
+            "move": "Knock Off",
+            "id": "knockoff",
+            "pp": 31,
+            "maxpp": 32,
+            "target": "normal",
+            "disabled": false
+          }
+        ]
+      }
+    ],
+    "side": {
+      "name": "ReceiverBot",
+      "id": "p2",
+      "pokemon": [
+        {
+          "ident": "p2: Gurdurr",
+          "details": "Gurdurr, L87, M",
+          "condition": "84/290",
+          "active": true,
+          "stats": {
+            "atk": 232,
+            "def": 198,
+            "spa": 119,
+            "spd": 137,
+            "spe": 119
+          },
+          "moves": [
+            "bulkup",
+            "drainpunch",
+            "machpunch",
+            "knockoff"
+          ],
+          "baseAbility": "guts",
+          "item": "eviolite",
+          "pokeball": "pokeball",
+          "ability": "guts"
+        },
+        {
+          "ident": "p2: Jynx",
+          "details": "Jynx, L89, F",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 94,
+            "def": 113,
+            "spa": 255,
+            "spd": 220,
+            "spe": 220
+          },
+          "moves": [
+            "icebeam",
+            "psychic",
+            "trick",
+            "focusblast"
+          ],
+          "baseAbility": "dryskin",
+          "item": "choicescarf",
+          "pokeball": "pokeball",
+          "ability": "dryskin"
+        },
+        {
+          "ident": "p2: Garchomp",
+          "details": "Garchomp, L77, F",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 245,
+            "def": 191,
+            "spa": 168,
+            "spd": 175,
+            "spe": 202
+          },
+          "moves": [
+            "swordsdance",
+            "stoneedge",
+            "outrage",
+            "earthquake"
+          ],
+          "baseAbility": "roughskin",
+          "item": "garchompite",
+          "pokeball": "pokeball",
+          "ability": "roughskin"
+        },
+        {
+          "ident": "p2: Golurk",
+          "details": "Golurk, L87",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 266,
+            "def": 189,
+            "spa": 145,
+            "spd": 189,
+            "spe": 145
+          },
+          "moves": [
+            "icepunch",
+            "shadowpunch",
+            "earthquake",
+            "rockpolish"
+          ],
+          "baseAbility": "ironfist",
+          "item": "lifeorb",
+          "pokeball": "pokeball",
+          "ability": "ironfist"
+        },
+        {
+          "ident": "p2: Girafarig",
+          "details": "Girafarig, L95, F",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 157,
+            "def": 177,
+            "spa": 225,
+            "spd": 177,
+            "spe": 215
+          },
+          "moves": [
+            "hypervoice",
+            "thunderbolt",
+            "psyshock",
+            "nastyplot"
+          ],
+          "baseAbility": "sapsipper",
+          "item": "lifeorb",
+          "pokeball": "pokeball",
+          "ability": "sapsipper"
+        },
+        {
+          "ident": "p2: Masquerain",
+          "details": "Masquerain, L87, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 109,
+            "def": 158,
+            "spa": 224,
+            "spd": 192,
+            "spe": 189
+          },
+          "moves": [
+            "hydropump",
+            "bugbuzz",
+            "airslash",
+            "quiverdance"
+          ],
+          "baseAbility": "intimidate",
+          "item": "leftovers",
+          "pokeball": "pokeball",
+          "ability": "intimidate"
+        }
+      ]
+    },
+    "rqid": 71
+  }
+}
