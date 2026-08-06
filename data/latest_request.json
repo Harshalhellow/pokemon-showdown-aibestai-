@@ -1,40 +1,40 @@
 {
-  "received_at": "2026-07-28T08:01:15.951804+00:00",
-  "room_id": "battle-gen7randombattle-37",
+  "received_at": "2026-08-06T09:43:48.259359+00:00",
+  "room_id": "battle-gen7randombattle-45",
   "request": {
     "active": [
       {
         "moves": [
           {
-            "move": "Bulk Up",
-            "id": "bulkup",
-            "pp": 31,
-            "maxpp": 32,
-            "target": "self",
+            "move": "Air Slash",
+            "id": "airslash",
+            "pp": 21,
+            "maxpp": 24,
+            "target": "any",
             "disabled": false
           },
           {
-            "move": "Drain Punch",
-            "id": "drainpunch",
-            "pp": 15,
+            "move": "Bug Buzz",
+            "id": "bugbuzz",
+            "pp": 16,
             "maxpp": 16,
             "target": "normal",
             "disabled": false
           },
           {
-            "move": "Mach Punch",
-            "id": "machpunch",
-            "pp": 48,
-            "maxpp": 48,
+            "move": "Energy Ball",
+            "id": "energyball",
+            "pp": 16,
+            "maxpp": 16,
             "target": "normal",
             "disabled": false
           },
           {
-            "move": "Knock Off",
-            "id": "knockoff",
+            "move": "Quiver Dance",
+            "id": "quiverdance",
             "pp": 31,
             "maxpp": 32,
-            "target": "normal",
+            "target": "self",
             "disabled": false
           }
         ]
@@ -45,145 +45,145 @@
       "id": "p2",
       "pokemon": [
         {
-          "ident": "p2: Gurdurr",
-          "details": "Gurdurr, L87, M",
-          "condition": "84/290",
+          "ident": "p2: Mothim",
+          "details": "Mothim, L93, M",
+          "condition": "161/281 tox",
           "active": true,
           "stats": {
-            "atk": 232,
-            "def": 198,
-            "spa": 119,
-            "spd": 137,
-            "spe": 119
+            "atk": 179,
+            "def": 146,
+            "spa": 228,
+            "spd": 146,
+            "spe": 176
           },
           "moves": [
-            "bulkup",
-            "drainpunch",
-            "machpunch",
-            "knockoff"
-          ],
-          "baseAbility": "guts",
-          "item": "eviolite",
-          "pokeball": "pokeball",
-          "ability": "guts"
-        },
-        {
-          "ident": "p2: Jynx",
-          "details": "Jynx, L89, F",
-          "condition": "0 fnt",
-          "active": false,
-          "stats": {
-            "atk": 94,
-            "def": 113,
-            "spa": 255,
-            "spd": 220,
-            "spe": 220
-          },
-          "moves": [
-            "icebeam",
-            "psychic",
-            "trick",
-            "focusblast"
-          ],
-          "baseAbility": "dryskin",
-          "item": "choicescarf",
-          "pokeball": "pokeball",
-          "ability": "dryskin"
-        },
-        {
-          "ident": "p2: Garchomp",
-          "details": "Garchomp, L77, F",
-          "condition": "0 fnt",
-          "active": false,
-          "stats": {
-            "atk": 245,
-            "def": 191,
-            "spa": 168,
-            "spd": 175,
-            "spe": 202
-          },
-          "moves": [
-            "swordsdance",
-            "stoneedge",
-            "outrage",
-            "earthquake"
-          ],
-          "baseAbility": "roughskin",
-          "item": "garchompite",
-          "pokeball": "pokeball",
-          "ability": "roughskin"
-        },
-        {
-          "ident": "p2: Golurk",
-          "details": "Golurk, L87",
-          "condition": "0 fnt",
-          "active": false,
-          "stats": {
-            "atk": 266,
-            "def": 189,
-            "spa": 145,
-            "spd": 189,
-            "spe": 145
-          },
-          "moves": [
-            "icepunch",
-            "shadowpunch",
-            "earthquake",
-            "rockpolish"
-          ],
-          "baseAbility": "ironfist",
-          "item": "lifeorb",
-          "pokeball": "pokeball",
-          "ability": "ironfist"
-        },
-        {
-          "ident": "p2: Girafarig",
-          "details": "Girafarig, L95, F",
-          "condition": "0 fnt",
-          "active": false,
-          "stats": {
-            "atk": 157,
-            "def": 177,
-            "spa": 225,
-            "spd": 177,
-            "spe": 215
-          },
-          "moves": [
-            "hypervoice",
-            "thunderbolt",
-            "psyshock",
-            "nastyplot"
-          ],
-          "baseAbility": "sapsipper",
-          "item": "lifeorb",
-          "pokeball": "pokeball",
-          "ability": "sapsipper"
-        },
-        {
-          "ident": "p2: Masquerain",
-          "details": "Masquerain, L87, M",
-          "condition": "0 fnt",
-          "active": false,
-          "stats": {
-            "atk": 109,
-            "def": 158,
-            "spa": 224,
-            "spd": 192,
-            "spe": 189
-          },
-          "moves": [
-            "hydropump",
-            "bugbuzz",
             "airslash",
+            "bugbuzz",
+            "energyball",
             "quiverdance"
           ],
-          "baseAbility": "intimidate",
+          "baseAbility": "tintedlens",
+          "item": "buginiumz",
+          "pokeball": "pokeball",
+          "ability": "tintedlens"
+        },
+        {
+          "ident": "p2: Stunfisk",
+          "details": "Stunfisk, L88, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 121,
+            "def": 198,
+            "spa": 193,
+            "spd": 225,
+            "spe": 107
+          },
+          "moves": [
+            "earthpower",
+            "rest",
+            "discharge",
+            "sleeptalk"
+          ],
+          "baseAbility": "static",
           "item": "leftovers",
           "pokeball": "pokeball",
-          "ability": "intimidate"
+          "ability": "static"
+        },
+        {
+          "ident": "p2: Purugly",
+          "details": "Purugly, L89, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 197,
+            "def": 165,
+            "spa": 165,
+            "spd": 156,
+            "spe": 250
+          },
+          "moves": [
+            "return102",
+            "uturn",
+            "knockoff",
+            "fakeout"
+          ],
+          "baseAbility": "thickfat",
+          "item": "silkscarf",
+          "pokeball": "pokeball",
+          "ability": "thickfat"
+        },
+        {
+          "ident": "p2: Skuntank",
+          "details": "Skuntank, L87, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 212,
+            "def": 166,
+            "spa": 173,
+            "spd": 156,
+            "spe": 196
+          },
+          "moves": [
+            "poisonjab",
+            "crunch",
+            "fireblast",
+            "suckerpunch"
+          ],
+          "baseAbility": "aftermath",
+          "item": "assaultvest",
+          "pokeball": "pokeball",
+          "ability": "aftermath"
+        },
+        {
+          "ident": "p2: Scizor",
+          "details": "Scizor, L75, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 239,
+            "def": 194,
+            "spa": 126,
+            "spd": 164,
+            "spe": 141
+          },
+          "moves": [
+            "bulletpunch",
+            "defog",
+            "uturn",
+            "roost"
+          ],
+          "baseAbility": "lightmetal",
+          "item": "scizorite",
+          "pokeball": "pokeball",
+          "ability": "lightmetal"
+        },
+        {
+          "ident": "p2: Luvdisc",
+          "details": "Luvdisc, M",
+          "condition": "0 fnt",
+          "active": false,
+          "stats": {
+            "atk": 65,
+            "def": 167,
+            "spa": 137,
+            "spd": 187,
+            "spe": 251
+          },
+          "moves": [
+            "toxic",
+            "scald",
+            "protect",
+            "icebeam"
+          ],
+          "baseAbility": "hydration",
+          "item": "leftovers",
+          "pokeball": "pokeball",
+          "ability": "hydration"
         }
       ]
     },
-    "rqid": 71
+    "rqid": 93
   }
 }

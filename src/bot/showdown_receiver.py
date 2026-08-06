@@ -8,10 +8,11 @@ from pathlib import Path
 
 from websockets.asyncio.client import connect
 from websockets.exceptions import ConnectionClosed
-from src.battle.legal_actions import (
-    choose_uniform_action,
-    legal_actions,
-)
+
+from src.agents.heuristic_agent import HeuristicAgent
+from src.battle.legal_actions import legal_actions
+from src.battle.state import BattleState
+from src.battle.trajectory import TrajectoryRecorder
 
 SERVER_URL = "ws://localhost:8000/showdown/websocket"
 ORIGIN = "http://localhost:8000"
@@ -20,6 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIRECTORY = PROJECT_ROOT / "data"
 RAW_LOG_FILE = DATA_DIRECTORY / "showdown_messages.log"
 LATEST_REQUEST_FILE = DATA_DIRECTORY / "latest_request.json"
+TRAJECTORY_FILE = DATA_DIRECTORY / "trajectories.jsonl"
 
 
 def split_frame(frame: str) -> tuple[str, list[str]]:
@@ -73,8 +75,29 @@ async def handle_protocol_line(
     room_id: str,
     line: str,
     username: str,
+    battle_states: dict[str, BattleState],
+    agent: HeuristicAgent,
+    trajectory_recorder: TrajectoryRecorder,
 ) -> None:
     print(f"[RECEIVED][{room_id}] {line}")
+
+    battle_state = None
+
+    if room_id.startswith("battle-"):
+        battle_state = battle_states.setdefault(
+            room_id,
+            BattleState(room_id),
+        )
+        battle_state.update_from_protocol(line)
+
+        if battle_state.finished:
+            saved_file = trajectory_recorder.finish_battle(battle_state)
+
+            if saved_file:
+                print(f"Battle trajectory saved to: {saved_file}")
+
+            battle_states.pop(room_id, None)
+            return
 
     if line.startswith("|challstr|"):
         await send_command(websocket, f"/trn {username}")
@@ -172,6 +195,18 @@ async def handle_protocol_line(
             print("Could not decode the battle request JSON.")
             return
 
+        if not isinstance(request, dict):
+            print("Battle request did not contain a decision object.")
+            return
+
+        if battle_state is None:
+            battle_state = battle_states.setdefault(
+                room_id,
+                BattleState(room_id),
+            )
+
+        battle_state.update_from_request(request)
+
         save_request(room_id, request)
 
         team = request.get("side", {}).get("pokemon", [])
@@ -196,14 +231,30 @@ async def handle_protocol_line(
             print("No decision is required for this request.")
             return
 
-        chosen_action = choose_uniform_action(request)
+        decision = agent.choose_action(request, battle_state)
+        chosen_action = decision.action
 
         if chosen_action is None:
             print("Could not select an action.")
             return
 
         print(f"Legal actions: {choices}")
-        print(f"Randomly selected action: {chosen_action}")
+        print("Heuristic ranking:")
+
+        for scored_action in decision.ranked_actions:
+            reason_text = "; ".join(scored_action.reasons)
+            print(
+                f"  {scored_action.action}: "
+                f"{scored_action.score:.3f} ({reason_text})"
+            )
+
+        print(f"Selected action: {chosen_action}")
+
+        trajectory_recorder.record_decision(
+            battle_state,
+            request,
+            decision,
+        )
 
         command = f"/choose {chosen_action}"
 
@@ -221,6 +272,9 @@ async def handle_protocol_line(
 
 async def run_receiver(username: str) -> None:
     DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    battle_states: dict[str, BattleState] = {}
+    agent = HeuristicAgent(generation=7)
+    trajectory_recorder = TrajectoryRecorder(TRAJECTORY_FILE)
 
     print(f"Connecting to {SERVER_URL}...")
 
@@ -245,6 +299,9 @@ async def run_receiver(username: str) -> None:
                         room_id,
                         line,
                         username,
+                        battle_states,
+                        agent,
+                        trajectory_recorder,
                     )
 
     except ConnectionClosed as error:
