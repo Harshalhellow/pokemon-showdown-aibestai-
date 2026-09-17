@@ -1,11 +1,14 @@
 """
 Self-contained battle simulator.
 
-Pits ImprovedHeuristicAgent vs HeuristicAgent for N battles and prints a
-win/loss/draw breakdown.  No network or Pokémon Showdown server needed.
+Pits ImprovedHeuristicAgent vs HeuristicAgent / HarderHeuristicAgent for N
+battles and prints a win/loss/draw breakdown.  No network or Pokémon Showdown
+server needed.
 
 Usage:
     python -m tests.battle_sim [--battles 1000] [--seed 42]
+
+    --baseline  {original|harder}   which baseline to fight (default: harder)
 
 The simulator is deliberately simple:
   - Each Pokémon has scaled HP (base_hp * 2) and deals damage based on
@@ -28,6 +31,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from poke_env.data import GenData
 from src.agents.heuristic_agent import HeuristicAgent
+from src.agents.harder_heuristic_agent import HarderHeuristicAgent
 from src.agents.improved_heuristic_agent import ImprovedHeuristicAgent
 from src.battle.state import BattleState, PokemonState, to_id
 
@@ -376,7 +380,8 @@ def run_battle(
     room_id: str = "battle",
 ) -> int:
     """
-    Simulate one battle.  Returns +1 if improved wins, -1 if baseline wins, 0 for draw.
+    Simulate one battle.  Returns +1 if p1 (improved) wins, -1 if p2 (baseline) wins, 0 for draw.
+    baseline_agent can be HeuristicAgent or HarderHeuristicAgent.
     """
     p1 = SimSide("p1", pool_indices_p1)  # improved
     p2 = SimSide("p2", pool_indices_p2)  # baseline
@@ -397,7 +402,11 @@ def run_battle(
 
         # Get decisions
         dec1 = improved_agent.choose_action(req1, state1, room_id=room_id + "_p1")
-        dec2 = baseline_agent.choose_action(req2, state2)
+        # HarderHeuristicAgent accepts room_id; plain HeuristicAgent does not.
+        if isinstance(baseline_agent, HarderHeuristicAgent):
+            dec2 = baseline_agent.choose_action(req2, state2, room_id=room_id + "_p2")
+        else:
+            dec2 = baseline_agent.choose_action(req2, state2)
 
         act1 = dec1.action or "pass"
         act2 = dec2.action or "pass"
@@ -464,56 +473,68 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Battle simulator: Improved vs Baseline")
     parser.add_argument("--battles", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--baseline",
+        choices=["original", "harder", "both"],
+        default="both",
+        help="Which baseline agent to fight (default: both)",
+    )
     args = parser.parse_args()
 
-    random.seed(args.seed)
+    matchups: list[tuple[str, HeuristicAgent]] = []
+    if args.baseline in ("original", "both"):
+        matchups.append(("HeuristicAgent (original)", HeuristicAgent(generation=7)))
+    if args.baseline in ("harder", "both"):
+        matchups.append(("HarderHeuristicAgent (patched)", HarderHeuristicAgent(generation=7)))
 
-    improved = ImprovedHeuristicAgent(generation=7)
-    baseline = HeuristicAgent(generation=7)
+    for baseline_label, baseline in matchups:
+        random.seed(args.seed)
+        improved = ImprovedHeuristicAgent(generation=7)
 
-    wins = draws = losses = 0
-    pool_size = len(POKEMON_POOL)
-    team_size = 3
+        wins = draws = losses = 0
+        pool_size = len(POKEMON_POOL)
+        team_size = 3
 
-    for battle_num in range(1, args.battles + 1):
-        # Random teams without repetition per side (sides may share mons)
-        p1_indices = random.sample(range(pool_size), team_size)
-        p2_indices = random.sample(range(pool_size), team_size)
+        print(f"\n  >>> ImprovedHeuristicAgent  vs  {baseline_label}  <<<\n")
 
-        result = run_battle(
-            improved, baseline,
-            p1_indices, p2_indices,
-            room_id=f"battle_{battle_num}",
-        )
+        for battle_num in range(1, args.battles + 1):
+            p1_indices = random.sample(range(pool_size), team_size)
+            p2_indices = random.sample(range(pool_size), team_size)
 
-        if result == 1:
-            wins += 1
-        elif result == -1:
-            losses += 1
-        else:
-            draws += 1
-
-        if battle_num % 100 == 0:
-            total_decided = wins + losses
-            wp = wins / battle_num * 100
-            print(
-                f"  [{battle_num:>4}/{args.battles}]  "
-                f"Improved W={wins}  Baseline W={losses}  Draws={draws}  "
-                f"Win%={wp:.1f}%"
+            result = run_battle(
+                improved, baseline,
+                p1_indices, p2_indices,
+                room_id=f"battle_{battle_num}",
             )
 
-    total = args.battles
-    print()
-    print("=" * 60)
-    print(f"  FINAL RESULTS  ({total} battles, seed={args.seed})")
-    print("=" * 60)
-    print(f"  ImprovedHeuristicAgent wins : {wins:>5}  ({wins/total*100:.1f}%)")
-    print(f"  HeuristicAgent (baseline)   : {losses:>5}  ({losses/total*100:.1f}%)")
-    print(f"  Draws                       : {draws:>5}  ({draws/total*100:.1f}%)")
-    decided = wins + losses
-    if decided:
-        print(f"  Win rate (excl. draws)      : {wins/decided*100:.1f}%")
-    print("=" * 60)
+            if result == 1:
+                wins += 1
+            elif result == -1:
+                losses += 1
+            else:
+                draws += 1
+
+            if battle_num % 100 == 0:
+                wp = wins / battle_num * 100
+                print(
+                    f"  [{battle_num:>4}/{args.battles}]  "
+                    f"Improved W={wins}  {baseline_label} W={losses}  Draws={draws}  "
+                    f"Win%={wp:.1f}%"
+                )
+
+        total = args.battles
+        print()
+        print("=" * 65)
+        print(f"  FINAL RESULTS  ({total} battles, seed={args.seed})")
+        print(f"  ImprovedHeuristicAgent  vs  {baseline_label}")
+        print("=" * 65)
+        print(f"  ImprovedHeuristicAgent wins : {wins:>5}  ({wins/total*100:.1f}%)")
+        print(f"  {baseline_label:<35}: {losses:>5}  ({losses/total*100:.1f}%)")
+        print(f"  Draws                       : {draws:>5}  ({draws/total*100:.1f}%)")
+        decided = wins + losses
+        if decided:
+            print(f"  Win rate (excl. draws)      : {wins/decided*100:.1f}%")
+        print("=" * 65)
 
 
 if __name__ == "__main__":
